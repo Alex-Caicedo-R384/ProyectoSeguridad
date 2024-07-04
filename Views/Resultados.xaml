@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoSeguridad.Views.Resultados"
+             Title="Resultados">
+    <StackLayout>
+        <Label Text="Datos del Dominio" HorizontalOptions="Center" Margin="0,20,0,10" FontSize="Large" />
+
+        <TableView>
+            <TableRoot>
+                <TableSection Title="Información del Dominio">
+                    <TextCell Text="Dominio" Detail="{Binding Domain}" />
+                    <TextCell Text="¿Es base de datos?" Detail="{Binding IsDB}" />
+                    <TextCell Text="Gasto" Detail="{Binding Spend}" />
+                </TableSection>
+
+                <TableSection Title="Meta">
+                    <TextCell Text="Nombre de la Empresa" Detail="{Binding Meta.companyName}" />
+                    <TextCell Text="País" Detail="{Binding Meta.country}" />
+                    <TextCell Text="ARank" Detail="{Binding Meta.aRank}" />
+                    <TextCell Text="QRank" Detail="{Binding Meta.qRank}" />
+                </TableSection>
+
+                <TableSection Title="Atributos">
+                    <TextCell Text="Empleados" Detail="{Binding Attributes.employees}" />
+                    <TextCell Text="Ranking Majestic" Detail="{Binding Attributes.mjRank}" />
+                    <TextCell Text="Ranking Majestic TLD" Detail="{Binding Attributes.mjTldRank}" />
+                    <TextCell Text="Seguidores" Detail="{Binding Attributes.followers}" />
+                </TableSection>
+            </TableRoot>
+        </TableView>
+    </StackLayout>
+</ContentPage>

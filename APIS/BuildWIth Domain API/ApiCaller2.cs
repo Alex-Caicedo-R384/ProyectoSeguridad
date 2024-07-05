@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using ProyectoSeguridad.Models.DNS;
 using ProyectoSeguridad.Models.WebCategorization;
 
 namespace ProyectoSeguridad.APIS.BuildWIth_Domain_API
 {
-    public class ApiCaller1
+    public class ApiCaller2
     {
         private static readonly HttpClient client = new HttpClient();
         private static string apiKey = "at_mvdRfgOl7UEnKpvNXOHm75Xx6YcOH";
 
-        public async Task<DnsServiceResponse> GetDnsServiceData(string domain)
+        public async Task<DomainCategorizationResponse> GetDomainCategorization(string domain)
         {
             try
             {
-                string url = $"https://www.whoisxmlapi.com/whoisserver/DNSService?apiKey={apiKey}&domainName={domain}&type=_all&outputFormat=JSON";
+                string url = $"https://website-categorization.whoisxmlapi.com/api/v3?apiKey={apiKey}&url={domain}";
                 string json = await GetJsonFromAPI(url);
-                DnsServiceResponse response = DeserializeJson<DnsServiceResponse>(json);
+                DomainCategorizationResponse response = DeserializeJson<DomainCategorizationResponse>(json);
                 return response;
             }
             catch (HttpRequestException ex)
@@ -27,7 +26,7 @@ namespace ProyectoSeguridad.APIS.BuildWIth_Domain_API
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en GetDnsServiceData: {ex.Message}");
+                Console.WriteLine($"Error en GetDomainCategorization: {ex.Message}");
                 throw;
             }
         }

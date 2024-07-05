@@ -53,10 +53,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="APIS\BuildWIth Trust API\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <MauiXaml Update="Views\Buscar.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

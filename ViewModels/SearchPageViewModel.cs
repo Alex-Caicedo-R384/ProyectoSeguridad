@@ -1,19 +1,32 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ProyectoSeguridad.APIS.BuildWIth_Domain_API;
-using ProyectoSeguridad.Models.BuildWIth_Domain_API;
+using ProyectoSeguridad.Models.DNS;
+using ProyectoSeguridad.Models.WebCategorization;
+using System;
+using System.Collections.ObjectModel;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace ProyectoSeguridad.ViewModels
 {
     public class SearchPageViewModel : ObservableObject
     {
-        private readonly ApiCaller1 _apiCaller = new ApiCaller1();
         private string _domain;
-        private Api20 _apiData;
+        private DnsServiceResponse _dnsData;
+        private DomainCategorizationResponse _webCategorizationData;
+        private string _selectedApi;
+
+        public ObservableCollection<string> ApiOptions { get; } = new ObservableCollection<string>
+        {
+            "DNS API",
+            "Web Categorization API"
+        };
+
+        public string SelectedApi
+        {
+            get => _selectedApi;
+            set => SetProperty(ref _selectedApi, value);
+        }
 
         public string Domain
         {
@@ -21,10 +34,16 @@ namespace ProyectoSeguridad.ViewModels
             set => SetProperty(ref _domain, value);
         }
 
-        public Api20 ApiData
+        public DnsServiceResponse DnsData
         {
-            get => _apiData;
-            set => SetProperty(ref _apiData, value);
+            get => _dnsData;
+            set => SetProperty(ref _dnsData, value);
+        }
+
+        public DomainCategorizationResponse WebCategorizationData
+        {
+            get => _webCategorizationData;
+            set => SetProperty(ref _webCategorizationData, value);
         }
 
         public IAsyncRelayCommand SearchCommand { get; }
@@ -40,25 +59,35 @@ namespace ProyectoSeguridad.ViewModels
             {
                 if (!string.IsNullOrEmpty(Domain))
                 {
-                    string url = $"https://api.builtwith.com/v20/api.xml?KEY=32bfb4d6-320c-4d7c-93a3-900779c2c56d&DOMAIN={Domain}";
-
-                    string xmlResponse = await _apiCaller.GetXmlFromAPI(url);
-
-                    XmlSerializer serializer = new XmlSerializer(typeof(Api20));
-                    using (StringReader reader = new StringReader(xmlResponse))
+                    if (SelectedApi == "DNS API")
                     {
-                        ApiData = (Api20)serializer.Deserialize(reader);
+                        DnsData = await App.GlobalApiCaller1.GetDnsServiceData(Domain);
+                    }
+                    else if (SelectedApi == "Web Categorization API")
+                    {
+                        WebCategorizationData = await App.GlobalApiCaller2.GetDomainCategorization(Domain);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Domain is empty");
+                    await HandleApiError("Domain is empty");
                 }
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"HTTP request error: {ex.Message}");
+                await HandleApiError($"HTTP request error: {ex.Message}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error fetching data: {ex.Message}");
+                await HandleApiError($"Error fetching data: {ex.Message}");
             }
+        }
+
+        private async Task HandleApiError(string errorMessage)
+        {
+            await App.Current.MainPage.DisplayAlert("Error", errorMessage, "Aceptar");
         }
     }
 }

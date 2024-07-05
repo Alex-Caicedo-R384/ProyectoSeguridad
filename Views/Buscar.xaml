@@ -8,6 +8,15 @@
             <Entry 
                 x:Name="DomainEntry"
                 Placeholder="Ingrese el dominio"
+                Text="{Binding Domain, Mode=TwoWay}"
+                VerticalOptions="CenterAndExpand"
+                HorizontalOptions="FillAndExpand" />
+
+            <Picker 
+                x:Name="ApiPicker"
+                Title="Seleccione API"
+                ItemsSource="{Binding ApiOptions}"
+                SelectedItem="{Binding SelectedApi}"
                 VerticalOptions="CenterAndExpand"
                 HorizontalOptions="FillAndExpand" />
 
@@ -16,7 +25,7 @@
                 VerticalOptions="Center"
                 HorizontalOptions="Center"
                 Command="{Binding SearchCommand}"
-                CommandParameter="{Binding Source={x:Reference DomainEntry}, Path=Text}" />
+                Clicked="OnSearchClicked"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

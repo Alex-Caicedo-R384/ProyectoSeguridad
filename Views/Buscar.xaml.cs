@@ -1,8 +1,5 @@
 using Microsoft.Maui.Controls;
 using ProyectoSeguridad.ViewModels;
-using ProyectoSeguridad.Models.DNS;
-using ProyectoSeguridad.Models.WebCategorization;
-using ProyectoSeguridad.APIS.BuildWIth_Domain_API;
 using System;
 
 namespace ProyectoSeguridad.Views
@@ -10,8 +7,7 @@ namespace ProyectoSeguridad.Views
     public partial class Buscar : ContentPage
     {
         private readonly SearchPageViewModel _viewModel;
-
-        private bool _isSearching = false; // Bandera para controlar el estado de búsqueda
+        private bool _isSearching = false;
 
         public Buscar()
         {
@@ -29,7 +25,7 @@ namespace ProyectoSeguridad.Views
                 if (_isSearching)
                 {
                     Console.WriteLine("Ya se está realizando una búsqueda.");
-                    return; // Evitar que se realice otra búsqueda si ya está en curso una
+                    return;
                 }
 
                 _isSearching = true;

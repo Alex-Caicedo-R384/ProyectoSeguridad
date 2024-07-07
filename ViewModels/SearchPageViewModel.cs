@@ -15,6 +15,12 @@ namespace ProyectoSeguridad.ViewModels
         private DnsServiceResponse _dnsData;
         private DomainCategorizationResponse _webCategorizationData;
         private string _selectedApi;
+        private bool _isSearching = false;
+
+        public SearchPageViewModel()
+        {
+            SearchCommand = new AsyncRelayCommand(SearchDomainAsync);
+        }
 
         public ObservableCollection<string> ApiOptions { get; } = new ObservableCollection<string>
         {
@@ -48,15 +54,18 @@ namespace ProyectoSeguridad.ViewModels
 
         public IAsyncRelayCommand SearchCommand { get; }
 
-        public SearchPageViewModel()
-        {
-            SearchCommand = new AsyncRelayCommand(SearchDomainAsync);
-        }
-
         private async Task SearchDomainAsync()
         {
             try
             {
+                if (_isSearching)
+                {
+                    Console.WriteLine("Ya se está realizando una búsqueda.");
+                    return;
+                }
+
+                _isSearching = true;
+
                 if (!string.IsNullOrEmpty(Domain))
                 {
                     if (SelectedApi == "DNS API")
@@ -82,6 +91,10 @@ namespace ProyectoSeguridad.ViewModels
             {
                 Console.WriteLine($"Error fetching data: {ex.Message}");
                 await HandleApiError($"Error fetching data: {ex.Message}");
+            }
+            finally
+            {
+                _isSearching = false;
             }
         }
 

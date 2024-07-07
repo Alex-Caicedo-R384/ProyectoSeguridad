@@ -4,23 +4,21 @@ using System.Xml.Serialization;
 
 namespace ProyectoSeguridad.Models.DNS
 {
+    // Root myDeserializedClass = JsonConvert.DeserializeObject<List<Root>>(myJsonResponse);
     public class DnsServiceResponse
     {
-        public List<string> tags { get; set; }
+        public string record_type { get; set; }
         public string value { get; set; }
-        public string subdomain { get; set; }
-        public string type { get; set; }
-        public List<int> ports { get; set; }
-        public DateTime last_seen { get; set; }
+        public string mname { get; set; }
+        public string rname { get; set; }
+        public int? serial { get; set; }
+        public int? refresh { get; set; }
+        public int? retry { get; set; }
+        public int? expire { get; set; }
+        public int? ttl { get; set; }
+        public int? flags { get; set; }
+        public string tag { get; set; }
     }
 
-    public class Root
-    {
-        public string domain { get; set; }
-        public List<object> tags { get; set; }
-        public List<string> subdomains { get; set; }
-        public List<DnsServiceResponse> data { get; set; }
-        public bool more { get; set; }
-    }
 
 }

@@ -1,29 +1,36 @@
 using Microsoft.Maui.Controls;
-using ProyectoSeguridad.ViewModels;
 using ProyectoSeguridad.Models.DNS;
 using ProyectoSeguridad.Models.WebCategorization;
-using ProyectoSeguridad.APIS.BuildWIth_Domain_API;
+using ProyectoSeguridad.ViewModels;
 using System;
-using System.Threading.Tasks;
 
 namespace ProyectoSeguridad.Views
 {
     public partial class Resultados : ContentPage
     {
-        private readonly ResultsPageViewModel _viewModel;
-
-        public Resultados(
-            DomainCategorizationResponse webCategorizationData,
-            DnsServiceResponse dnsData)
+        public Resultados(DomainCategorizationResponse domaincategorizationData, DnsServiceResponse dnsData)
         {
             InitializeComponent();
-            _viewModel = new ResultsPageViewModel(webCategorizationData, dnsData);
-            BindingContext = _viewModel;
-        }
 
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
+            if (domaincategorizationData != null)
+            {
+                System.Diagnostics.Debug.WriteLine($"Datos de categorización recibidos en Resultados: {System.Text.Json.JsonSerializer.Serialize(domaincategorizationData)}");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("No se recibieron datos de categorización en Resultados");
+            }
+
+            if (dnsData != null)
+            {
+                System.Diagnostics.Debug.WriteLine($"Datos de DNS recibidos en Resultados: {System.Text.Json.JsonSerializer.Serialize(dnsData)}");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("No se recibieron datos de DNS en Resultados");
+            }
+
+            BindingContext = new ResultsPageViewModel { DomainCategorizationData = domaincategorizationData, DnsData = dnsData };
         }
     }
 }

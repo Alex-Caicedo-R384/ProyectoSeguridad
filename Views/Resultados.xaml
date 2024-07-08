@@ -1,63 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ProyectoSeguridad.ViewModels"
              x:Class="ProyectoSeguridad.Views.Resultados"
-             Title="Resultados"
-             x:Name="page">
+             Title="Resultados">
 
-    <ScrollView>
-        <StackLayout Margin="20">
-            <!-- Colección para datos de categorización web -->
-            <CollectionView ItemsSource="{Binding DomainCategorizationData.AS.Category}" 
-                            IsVisible="{Binding IsWebCategorizationApiSelected}">
-                <CollectionView.ItemTemplate>
+    <ContentPage.Content>
+        <StackLayout Spacing="10">
+            <Label Text="Datos de DNS:" FontAttributes="Bold" />
+            <ListView ItemsSource="{Binding DnsData.Records.A}">
+                <ListView.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout>
-                            <Label Text="Nombre:" FontAttributes="Bold" FontSize="Medium" />
-                            <Label Text="{Binding DomainName}" FontSize="Small" />
-                            <Label Text="ID:" FontAttributes="Bold" FontSize="Medium" />
-                            <Label Text="{Binding As.Asn}" FontSize="Small" />
-                            <Label Text="País:" FontAttributes="Bold" FontSize="Medium" />
-                            <Label Text="{Binding As.Name}" FontSize="Small" />
-                            <Label Text="Rating:" FontAttributes="Bold" FontSize="Medium" />
-                            <Label Text="{Binding As.Route}" FontSize="Small" />
-                            <Label Text="Última Actualización:" FontAttributes="Bold" FontSize="Medium" />
-                            <Label Text="{Binding CreatedDate}" FontSize="Small" />
-                            <BoxView HeightRequest="2" Color="#61071d" Margin="0,10,0,10" />
-                        </StackLayout>
+                        <ViewCell>
+                            <StackLayout>
+                                <Label Text="{Binding address}" />
+                                <Label Text="{Binding ttl}" />
+                            </StackLayout>
+                        </ViewCell>
                     </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                </ListView.ItemTemplate>
+            </ListView>
 
-            <!-- Colección para datos DNS -->
-            <CollectionView ItemsSource="{Binding DnsData.MX.N.Records.Root.SOA}" 
-                            IsVisible="{Binding IsDnsApiSelected}">
-                <CollectionView.ItemTemplate>
+            <Label Text="Datos de Categorización:" FontAttributes="Bold" />
+            <ListView ItemsSource="{Binding DomainCategorizationData.TestResults}">
+                <ListView.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout>
-                            <Label Text="DNS Data" FontAttributes="Bold" FontSize="Medium" />
-                            <Label Text="Nombre de Dominio:" FontAttributes="Bold" FontSize="Medium" />
-                            <Label Text="{Binding address}" FontSize="Small" />
-                            <Label Text="Fecha de Creación:" FontAttributes="Bold" FontSize="Medium" />
-                            <Label Text="{Binding ttl}" FontSize="Small" />
-                            <Label Text="Estado:" FontAttributes="Bold" FontSize="Medium" />
-                            <Label Text="{Binding records.status}" FontSize="Small" />
-                            <Label Text="Hostname:" FontAttributes="Bold" FontSize="Medium" />
-                            <Label Text="{Binding records.hostname}" FontSize="Small" />
-                            <Label Text="Servidores de Nombres:" FontAttributes="Bold" FontSize="Medium" />
-                            <Label Text="{Binding records.NS.nameserver}" FontSize="Small" />
-                            <Label Text="SOA - Servidor Principal:" FontAttributes="Bold" FontSize="Medium" />
-                            <Label Text="{Binding records.SOA.nameserver}" FontSize="Small" />
-                            <Label Text="Correo Electrónico del Administrador:" FontAttributes="Bold" FontSize="Medium" />
-                            <Label Text="{Binding records.SOA.hostmaster}" FontSize="Small" />
-                            <Label Text="MX - Intercambio de Correo:" FontAttributes="Bold" FontSize="Medium" />
-                            <Label Text="{Binding records.MX.exchange}" FontSize="Small" />
-                            <Label Text="Prioridad MX:" FontAttributes="Bold" FontSize="Medium" />
-                            <Label Text="{Binding records.MX.priority}" FontSize="Small" />
-                            <BoxView HeightRequest="2" Color="#61071d" Margin="0,10,0,10" />
-                        </StackLayout>
+                        <ViewCell>
+                            <StackLayout>
+                                <Label Text="{Binding test}" />
+                                <Label Text="{Binding testCode}" />
+                            </StackLayout>
+                        </ViewCell>
                     </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackLayout>
-    </ScrollView>
+    </ContentPage.Content>
 </ContentPage>

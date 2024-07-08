@@ -1,27 +1,31 @@
 ﻿namespace ProyectoSeguridad.Models.WebCategorization
 {
     public class DomainCategorizationResponse
-    {
-        public As As { get; set; }
-        public string DomainName { get; set; }
-        public List<Category> Categories { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public bool WebsiteResponded { get; set; }
-    }
+    {    
+        public class Rootobject
+        {
+            public As _as { get; set; }
+            public string domainName { get; set; }
+            public Category[] categories { get; set; }
+            public DateTime createdDate { get; set; }
+            public bool websiteResponded { get; set; }
+        }
 
-    public class As
-    {
-        public int Asn { get; set; }
-        public string Domain { get; set; }
-        public string Name { get; set; }
-        public string Route { get; set; }
-        public string Type { get; set; }
-    }
+        public class As
+        {
+            public int asn { get; set; }
+            public string domain { get; set; }
+            public string name { get; set; }
+            public string route { get; set; }
+            public string type { get; set; }
+        }
 
-    public class Category
-    {
-        public double Confidence { get; set; }
-        public int Id { get; set; }
-        public string Name { get; set; }
+        public class Category
+        {
+            public float confidence { get; set; }
+            public int id { get; set; }
+            public string name { get; set; }
+        }
+
     }
 }

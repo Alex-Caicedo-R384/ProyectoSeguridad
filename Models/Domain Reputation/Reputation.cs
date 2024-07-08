@@ -2,23 +2,26 @@
 {
     public class DomainReputationResponse
     {
-        public string mode { get; set; }
-        public double reputationScore { get; set; }
-        public List<TestResult> testResults { get; set; }
-    }
+        public class Rootobject
+        {
+            public string mode { get; set; }
+            public float reputationScore { get; set; }
+            public Testresult[] testResults { get; set; }
+        }
 
-    public class TestResult
-    {
-        public string test { get; set; }
-        public int testCode { get; set; }
-        public List<Warning> warnings { get; set; }
-    }
+        public class Testresult
+        {
+            public string test { get; set; }
+            public int testCode { get; set; }
+            public Warning[] warnings { get; set; }
+        }
 
-    public class Warning
-    {
-        public string warningDescription { get; set; }
-        public int warningCode { get; set; }
-    }
+        public class Warning
+        {
+            public string warningDescription { get; set; }
+            public int warningCode { get; set; }
+        }
 
+    }
 
 }

@@ -6,6 +6,9 @@ using System;
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Maui.Controls;
+using ProyectoSeguridad.Views;
+using ProyectoSeguridad.APIS.BuildWIth_Domain_API;
 
 namespace ProyectoSeguridad.ViewModels
 {
@@ -13,8 +16,32 @@ namespace ProyectoSeguridad.ViewModels
     {
         private string _domain;
         private DnsServiceResponse _dnsData;
-        private DomainCategorizationResponse _webCategorizationData;
+        private DomainCategorizationResponse _domainCategorizationData;
         private string _selectedApi;
+        private readonly ApiCaller1 _apiCaller1 = new ApiCaller1();
+        private readonly ApiCaller2 _apiCaller2 = new ApiCaller2();
+
+
+        public string Domain
+        {
+            get => _domain;
+            set => SetProperty(ref _domain, value);
+        }
+
+        public DnsServiceResponse DnsData
+        {
+            get => _dnsData;
+            set => SetProperty(ref _dnsData, value);
+        }
+
+        public DomainCategorizationResponse DomainCategorizationData
+        {
+            get => _domainCategorizationData;
+            set => SetProperty(ref _domainCategorizationData, value);
+        }
+
+        public IAsyncRelayCommand SearchCommand { get; }
+
 
         public SearchPageViewModel()
         {
@@ -33,51 +60,58 @@ namespace ProyectoSeguridad.ViewModels
             set
             {
                 SetProperty(ref _selectedApi, value);
-                OnPropertyChanged(nameof(IsWebCategorizationApiSelected));
+                OnPropertyChanged(nameof(IsDomainCategorizationApiSelected));
                 OnPropertyChanged(nameof(IsDnsApiSelected));
             }
         }
-        public bool IsWebCategorizationApiSelected => SelectedApi == "Web Categorization API";
+
+        public bool IsDomainCategorizationApiSelected => SelectedApi == "Web Categorization API";
         public bool IsDnsApiSelected => SelectedApi == "DNS API";
-
-        public string Domain
-        {
-            get => _domain;
-            set => SetProperty(ref _domain, value);
-        }
-
-        public DnsServiceResponse DnsData
-        {
-            get => _dnsData;
-            set => SetProperty(ref _dnsData, value);
-        }
-
-        public DomainCategorizationResponse WebCategorizationData
-        {
-            get => _webCategorizationData;
-            set => SetProperty(ref _webCategorizationData, value);
-        }
-
-        public IAsyncRelayCommand SearchCommand { get; }
 
         private async Task SearchDomainAsync()
         {
             try
             {
-                if (!string.IsNullOrEmpty(Domain))
+                if (string.IsNullOrWhiteSpace(Domain))
                 {
-                    if (SelectedApi == "DNS API")
+                    await HandleApiError("Debe ingresar un dominio válido.");
+                    return;
+                }
+
+                if (SelectedApi == "DNS API")
+                {
+                    var dnsData = await _apiCaller1.GetDnsData(Domain);
+                    if (dnsData != null)
                     {
-                        DnsData = await App.GlobalApiCaller1.GetDnsServiceData(Domain);
+                        DnsData = dnsData;
+                        System.Diagnostics.Debug.WriteLine($"Datos DNS pasados a ResultsPage: {System.Text.Json.JsonSerializer.Serialize(dnsData)}");
                     }
-                    else if (SelectedApi == "Web Categorization API")
+                    else
                     {
-                        WebCategorizationData = await App.GlobalApiCaller2.GetDomainCategorization(Domain);
+                        await HandleApiError("No se encontraron datos DNS para el dominio.");
                     }
+                }
+                else if (SelectedApi == "Web Categorization API")
+                {
+                    var domainCategorizationData = await _apiCaller2.GetDomainCategorization(Domain);
+                    if (domainCategorizationData != null)
+                    {
+                        DomainCategorizationData = domainCategorizationData;
+                        System.Diagnostics.Debug.WriteLine($"Datos de categorización web pasados a ResultsPage: {System.Text.Json.JsonSerializer.Serialize(domainCategorizationData)}");
+                    }
+                    else
+                    {
+                        await HandleApiError("No se encontraron datos de categorización web para el dominio.");
+                    }
+                }
+
+                if (DnsData != null || DomainCategorizationData != null)
+                {
+                    await App.Current.MainPage.Navigation.PushAsync(new Resultados(DomainCategorizationData, DnsData));
                 }
                 else
                 {
-                    await HandleApiError("El dominio está vacío");
+                    await HandleApiError("No se pudieron obtener datos del dominio.");
                 }
             }
             catch (HttpRequestException ex)
@@ -93,6 +127,7 @@ namespace ProyectoSeguridad.ViewModels
                 await HandleApiError($"Error al obtener datos: {ex.Message}");
             }
         }
+
 
         private async Task HandleApiError(string errorMessage)
         {

@@ -30,18 +30,10 @@ namespace ProyectoSeguridad.Views
 
                 await _viewModel.SearchCommand.ExecuteAsync(_viewModel.Domain);
 
-                if (_viewModel.DnsData != null || _viewModel.WebCategorizationData != null)
+                if (_viewModel.DnsData != null || _viewModel.DomainCategorizationData != null)
                 {
-                    System.Diagnostics.Debug.WriteLine("Datos API obtenidos correctamente:");
-
-                    if (_viewModel.DnsData != null)
-                        System.Diagnostics.Debug.WriteLine($"DnsData: {_viewModel.DnsData}");
-
-                    if (_viewModel.WebCategorizationData != null)
-                        System.Diagnostics.Debug.WriteLine($"WebCategorizationData: {_viewModel.WebCategorizationData}");
-
                     await Navigation.PushAsync(new Resultados(
-                        _viewModel.WebCategorizationData,
+                        _viewModel.DomainCategorizationData,
                         _viewModel.DnsData));
                 }
                 else
@@ -62,5 +54,6 @@ namespace ProyectoSeguridad.Views
                 await DisplayAlert("Error", $"Error en la búsqueda: {ex.Message}", "Aceptar");
             }
         }
+
     }
 }

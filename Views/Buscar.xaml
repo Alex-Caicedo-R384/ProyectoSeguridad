@@ -28,7 +28,6 @@
                 Text="Buscar"
                 VerticalOptions="Center"
                 HorizontalOptions="Center"
-                Command="{Binding SearchCommand}"
                 Clicked="OnSearchClicked"/>
         </StackLayout>
     </ContentPage.Content>

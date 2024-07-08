@@ -1,10 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using ProyectoSeguridad.APIS.BuildWIth_Domain_API;
 using ProyectoSeguridad.Models.DNS;
 using ProyectoSeguridad.Models.WebCategorization;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace ProyectoSeguridad.ViewModels
 {
@@ -12,23 +8,23 @@ namespace ProyectoSeguridad.ViewModels
     {
         private DomainCategorizationResponse _domainCategorizationData;
         private DnsServiceResponse _dnsData;
-        private ApiCaller1 _apiCaller1;
-        private ApiCaller2 _apiCaller2;
+        private bool _isWebCategorizationApiSelected;
+        private bool _isDnsApiSelected;
+
+
 
         public ResultsPageViewModel()
         {
+            _domainCategorizationData = new DomainCategorizationResponse();
+            _dnsData = new DnsServiceResponse();
         }
 
         public ResultsPageViewModel(
             DomainCategorizationResponse domainCategorizationData,
-            DnsServiceResponse dnsData,
-            ApiCaller1 apiCaller1,
-            ApiCaller2 apiCaller2)
+            DnsServiceResponse dnsData)
         {
             _domainCategorizationData = domainCategorizationData;
             _dnsData = dnsData;
-            _apiCaller1 = apiCaller1;
-            _apiCaller2 = apiCaller2;
         }
 
         public DomainCategorizationResponse DomainCategorizationData
@@ -42,35 +38,15 @@ namespace ProyectoSeguridad.ViewModels
             get => _dnsData;
             set => SetProperty(ref _dnsData, value);
         }
-
-        public async Task PerformApiCall(string domain, bool useApi1)
+        public bool IsWebCategorizationApiSelected
         {
-            try
-            {
-                if (useApi1)
-                {
-                    DnsData = await App.GlobalApiCaller1.GetDnsServiceData(domain);
-                }
-                else
-                {
-                    DomainCategorizationData = await App.GlobalApiCaller2.GetDomainCategorization(domain);
-                }
-            }
-            catch (HttpRequestException ex)
-            {
-                Console.WriteLine($"Error de solicitud HTTP: {ex.Message}");
-                await HandleApiError("Error de solicitud HTTP");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error fetching data: {ex.Message}");
-                await HandleApiError($"Error fetching data: {ex.Message}");
-            }
-        }
-
-        private async Task HandleApiError(string errorMessage)
+            get => _isWebCategorizationApiSelected;
+            set => SetProperty(ref _isWebCategorizationApiSelected, value);
+        } 
+        public bool IsDnsApiSelected
         {
-            await App.Current.MainPage.DisplayAlert("Error", errorMessage, "Aceptar");
+            get => _isDnsApiSelected;
+            set => SetProperty(ref _isDnsApiSelected, value);
         }
     }
 }

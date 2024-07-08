@@ -14,20 +14,16 @@ namespace ProyectoSeguridad.Views
 
         public Resultados(
             DomainCategorizationResponse webCategorizationData,
-            DnsServiceResponse dnsData,
-            ApiCaller1 apiCaller1,
-            ApiCaller2 apiCaller2)
+            DnsServiceResponse dnsData)
         {
             InitializeComponent();
-            _viewModel = new ResultsPageViewModel(webCategorizationData, dnsData, apiCaller1, apiCaller2);
+            _viewModel = new ResultsPageViewModel(webCategorizationData, dnsData);
             BindingContext = _viewModel;
         }
 
-        public Resultados(DomainCategorizationResponse webCategorizationData, DnsServiceResponse dnsData, ApiCaller1 apiCaller1, ApiCaller2 apiCaller2, bool useApi1)
+        protected override void OnAppearing()
         {
-            InitializeComponent();
-            _viewModel = new ResultsPageViewModel(webCategorizationData, dnsData, apiCaller1, apiCaller2);
-            BindingContext = _viewModel;
+            base.OnAppearing();
         }
     }
 }

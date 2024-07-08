@@ -15,7 +15,6 @@ namespace ProyectoSeguridad.ViewModels
         private DnsServiceResponse _dnsData;
         private DomainCategorizationResponse _webCategorizationData;
         private string _selectedApi;
-        private bool _isSearching = false;
 
         public SearchPageViewModel()
         {
@@ -31,8 +30,15 @@ namespace ProyectoSeguridad.ViewModels
         public string SelectedApi
         {
             get => _selectedApi;
-            set => SetProperty(ref _selectedApi, value);
+            set
+            {
+                SetProperty(ref _selectedApi, value);
+                OnPropertyChanged(nameof(IsWebCategorizationApiSelected));
+                OnPropertyChanged(nameof(IsDnsApiSelected));
+            }
         }
+        public bool IsWebCategorizationApiSelected => SelectedApi == "Web Categorization API";
+        public bool IsDnsApiSelected => SelectedApi == "DNS API";
 
         public string Domain
         {
@@ -58,14 +64,6 @@ namespace ProyectoSeguridad.ViewModels
         {
             try
             {
-                if (_isSearching)
-                {
-                    Console.WriteLine("Ya se está realizando una búsqueda.");
-                    return;
-                }
-
-                _isSearching = true;
-
                 if (!string.IsNullOrEmpty(Domain))
                 {
                     if (SelectedApi == "DNS API")
@@ -79,22 +77,20 @@ namespace ProyectoSeguridad.ViewModels
                 }
                 else
                 {
-                    await HandleApiError("Domain is empty");
+                    await HandleApiError("El dominio está vacío");
                 }
             }
             catch (HttpRequestException ex)
             {
-                Console.WriteLine($"HTTP request error: {ex.Message}");
-                await HandleApiError($"HTTP request error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error de solicitud HTTP: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+                await HandleApiError($"Error de solicitud HTTP: {ex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error fetching data: {ex.Message}");
-                await HandleApiError($"Error fetching data: {ex.Message}");
-            }
-            finally
-            {
-                _isSearching = false;
+                System.Diagnostics.Debug.WriteLine($"Error al obtener datos: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+                await HandleApiError($"Error al obtener datos: {ex.Message}");
             }
         }
 

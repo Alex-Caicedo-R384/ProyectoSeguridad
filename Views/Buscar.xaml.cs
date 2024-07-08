@@ -6,78 +6,60 @@ namespace ProyectoSeguridad.Views
 {
     public partial class Buscar : ContentPage
     {
-        private readonly SearchPageViewModel _viewModel;
-        private bool _isSearching = false;
+        private readonly SearchPageViewModel _viewModel = new SearchPageViewModel();
 
         public Buscar()
         {
             InitializeComponent();
-            _viewModel = new SearchPageViewModel();
             BindingContext = _viewModel;
         }
 
-        public async void OnSearchClicked(object sender, EventArgs e)
+        private async void OnSearchClicked(object sender, EventArgs e)
         {
-            Console.WriteLine("Botón 'Buscar' presionado.");
-
             try
             {
-                if (_isSearching)
-                {
-                    Console.WriteLine("Ya se está realizando una búsqueda.");
-                    return;
-                }
-
-                _isSearching = true;
-
                 string domain = DomainEntry.Text;
 
                 if (string.IsNullOrWhiteSpace(domain))
                 {
                     await DisplayAlert("Error", "Debe ingresar un dominio válido.", "Aceptar");
-                    _isSearching = false;
                     return;
                 }
 
                 _viewModel.Domain = domain;
 
-                await _viewModel.SearchCommand.ExecuteAsync(null);
+                await _viewModel.SearchCommand.ExecuteAsync(_viewModel.Domain);
 
                 if (_viewModel.DnsData != null || _viewModel.WebCategorizationData != null)
                 {
-                    Console.WriteLine("Datos API obtenidos correctamente:");
+                    System.Diagnostics.Debug.WriteLine("Datos API obtenidos correctamente:");
 
                     if (_viewModel.DnsData != null)
-                        Console.WriteLine($"DnsData: {_viewModel.DnsData}");
+                        System.Diagnostics.Debug.WriteLine($"DnsData: {_viewModel.DnsData}");
 
                     if (_viewModel.WebCategorizationData != null)
-                        Console.WriteLine($"WebCategorizationData: {_viewModel.WebCategorizationData}");
+                        System.Diagnostics.Debug.WriteLine($"WebCategorizationData: {_viewModel.WebCategorizationData}");
 
                     await Navigation.PushAsync(new Resultados(
                         _viewModel.WebCategorizationData,
-                        _viewModel.DnsData,
-                        App.GlobalApiCaller1,
-                        App.GlobalApiCaller2));
+                        _viewModel.DnsData));
                 }
                 else
                 {
-                    Console.WriteLine("No se obtuvieron datos válidos de la API.");
                     await DisplayAlert("Error", "No se pudieron obtener datos del dominio.", "Aceptar");
                 }
             }
             catch (HttpRequestException ex)
             {
-                Console.WriteLine($"Error de solicitud HTTP: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error de solicitud HTTP: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
                 await DisplayAlert("Error", $"Error de solicitud HTTP: {ex.Message}", "Aceptar");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en la búsqueda: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error en la búsqueda: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
                 await DisplayAlert("Error", $"Error en la búsqueda: {ex.Message}", "Aceptar");
-            }
-            finally
-            {
-                _isSearching = false;
             }
         }
     }

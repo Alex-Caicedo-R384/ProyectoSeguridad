@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Net.Http;
-using System.Threading.Tasks;
 using ProyectoSeguridad.Models.WebCategorization;
+using System.Text.Json;
+
 
 namespace ProyectoSeguridad.APIS.BuildWIth_Domain_API
 {
@@ -16,17 +17,19 @@ namespace ProyectoSeguridad.APIS.BuildWIth_Domain_API
             {
                 string url = $"https://website-categorization.whoisxmlapi.com/api/v3?apiKey={apiKey}&url={domain}";
                 string json = await GetJsonFromAPI(url);
-                DomainCategorizationResponse response = DeserializeJson<DomainCategorizationResponse>(json);
+                DomainCategorizationResponse response = JsonSerializer.Deserialize<DomainCategorizationResponse>(json);
                 return response;
             }
             catch (HttpRequestException ex)
             {
                 Console.WriteLine($"Error de solicitud HTTP: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
                 throw;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error en GetDomainCategorization: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
                 throw;
             }
         }
@@ -45,24 +48,13 @@ namespace ProyectoSeguridad.APIS.BuildWIth_Domain_API
             catch (HttpRequestException ex)
             {
                 Console.WriteLine($"Error de solicitud HTTP: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
                 throw;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error en GetJsonFromAPI: {ex.Message}");
-                throw;
-            }
-        }
-
-        private T DeserializeJson<T>(string json)
-        {
-            try
-            {
-                return System.Text.Json.JsonSerializer.Deserialize<T>(json);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error en DeserializeJson: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
                 throw;
             }
         }

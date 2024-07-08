@@ -1,7 +1,6 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using ProyectoSeguridad.Models.Domain_Reputation;
+﻿using ProyectoSeguridad.Models.Domain_Reputation;
+using System.Text.Json;
+
 
 namespace ProyectoSeguridad.APIS.BuildWIth_Domain_API
 {
@@ -16,7 +15,7 @@ namespace ProyectoSeguridad.APIS.BuildWIth_Domain_API
             {
                 string url = $"https://domain-reputation.whoisxmlapi.com/api/v2?apiKey={apiKey}&url={domain}";
                 string json = await GetJsonFromAPI(url);
-                DomainReputationResponse response = DeserializeJson<DomainReputationResponse>(json);
+                DomainReputationResponse response = JsonSerializer.Deserialize<DomainReputationResponse>(json);
                 return response;
             }
             catch (HttpRequestException ex)
@@ -50,19 +49,6 @@ namespace ProyectoSeguridad.APIS.BuildWIth_Domain_API
             catch (Exception ex)
             {
                 Console.WriteLine($"Error en GetJsonFromAPI: {ex.Message}");
-                throw;
-            }
-        }
-
-        private T DeserializeJson<T>(string json)
-        {
-            try
-            {
-                return System.Text.Json.JsonSerializer.Deserialize<T>(json);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error en DeserializeJson: {ex.Message}");
                 throw;
             }
         }

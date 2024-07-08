@@ -1,24 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Serialization;
-
-namespace ProyectoSeguridad.Models.DNS
+﻿namespace ProyectoSeguridad.Models.DNS
 {
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<List<Root>>(myJsonResponse);
     public class DnsServiceResponse
     {
-        public string record_type { get; set; }
-        public string value { get; set; }
-        public string mname { get; set; }
-        public string rname { get; set; }
-        public int? serial { get; set; }
-        public int? refresh { get; set; }
-        public int? retry { get; set; }
-        public int? expire { get; set; }
-        public int? ttl { get; set; }
-        public int? flags { get; set; }
-        public string tag { get; set; }
+        public string address { get; set; }
+        public int ttl { get; set; }
     }
+
+    public class MX
+    {
+        public string exchange { get; set; }
+        public int priority { get; set; }
+    }
+
+    public class N
+    {
+        public string nameserver { get; set; }
+    }
+
+    public class Records
+    {
+        public List<DnsServiceResponse> A { get; set; }
+        public List<object> CNAME { get; set; }
+        public List<MX> MX { get; set; }
+        public List<N> NS { get; set; }
+        public List<SOA> SOA { get; set; }
+        public List<string> TXT { get; set; }
+    }
+
+    public class Root
+    {
+        public string status { get; set; }
+        public string hostname { get; set; }
+        public Records records { get; set; }
+    }
+
+    public class SOA
+    {
+        public string nameserver { get; set; }
+        public string hostmaster { get; set; }
+    }
+
 
 
 }

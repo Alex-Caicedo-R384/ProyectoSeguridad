@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ProyectoSeguridad.Models.Domain_Reputation
+﻿namespace ProyectoSeguridad.Models.Domain_Reputation
 {
     public class DomainReputationResponse
     {

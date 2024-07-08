@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ProyectoSeguridad.Models.WebCategorization
+﻿namespace ProyectoSeguridad.Models.WebCategorization
 {
     public class DomainCategorizationResponse
     {
